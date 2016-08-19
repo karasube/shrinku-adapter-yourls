@@ -1,0 +1,15 @@
+{
+  "name": "shrinku-adapter-yourls",
+  "version": "1.0.0",
+  "description": "YOURLS adapter for Shrinku",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "KOCH Maxence",
+  "license": "MIT",
+  "dependencies": {
+    "mysql": "^2.11.1",
+    "shrinku": "^1.0.1"
+  }
+}
