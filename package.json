@@ -1,7 +1,7 @@
 {
   "name": "shrinku-adapter-yourls",
   "version": "1.0.0",
-  "description": "YOURLS adapter for Shrinku",
+  "description": "(READ ONLY use with Migration Strategy) YOURLS adapter for Shrinku",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
