@@ -53,6 +53,7 @@ class YourlsAdapter extends Shrinku.Adapters.BaseAdapter {
 
   save(opts = {}) {
     super.save(opts);
+    throw new Error('Not implemented.');
   }
 }
 
