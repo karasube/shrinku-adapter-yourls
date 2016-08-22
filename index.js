@@ -29,6 +29,12 @@ class YourlsAdapter extends Shrinku.Adapters.BaseAdapter {
 
     const query = `SELECT keyword AS hash, url FROM ${this.opts.prefix}url WHERE url = '${opts.url}'`;
 
+
+    this.log.debug('debug', 'findByUrl generated query', {
+      opts,
+      query
+    });
+
     return new Promise((resolve, reject) => {
       return this.connection.query(query, (err, rows) => {
         return resolve(rows);
@@ -40,9 +46,16 @@ class YourlsAdapter extends Shrinku.Adapters.BaseAdapter {
     super.findByHash(opts);
 
     const query = `SELECT keyword AS hash, url FROM ${this.opts.prefix}url WHERE keyword = '${opts.hash}'`;
+
+    this.log.debug('debug', 'findByHash generated query', {
+      opts,
+      query
+    });
+
     return new Promise((resolve, reject) => {
       return this.connection.query(query, (err, rows) => {
-        return resolve(rows);
+        let selectedResult = (rows.length && rows.push ? rows[0] : rows);
+        return resolve(selectedResult);
       });
     });
   }
