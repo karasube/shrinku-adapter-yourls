@@ -10,7 +10,7 @@ class YourlsAdapter extends Shrinku.Adapters.BaseAdapter {
       password: '',
       database: 'yourls',
       prefix: 'yourls_',
-      port: 3306
+      port: 3306,
     }, opts);
 
     this.connection = mysql.createConnection({
@@ -18,7 +18,7 @@ class YourlsAdapter extends Shrinku.Adapters.BaseAdapter {
       user: this.opts.user,
       password: this.opts.password,
       database: this.opts.database,
-      port: this.opts.port
+      port: this.opts.port,
     });
 
     this.connection.connect();
@@ -27,37 +27,33 @@ class YourlsAdapter extends Shrinku.Adapters.BaseAdapter {
   findByUrl(opts = {}) {
     super.findByUrl(opts);
 
-    const query = `SELECT keyword AS hash, url FROM ${this.opts.prefix}url WHERE url = '${opts.url}'`;
+    const query = `SELECT keyword AS hash, url FROM ${this.opts.prefix}url `
+      + ` WHERE url = '${opts.url}'`;
 
 
     this.log.debug('debug', 'findByUrl generated query', {
       opts,
-      query
+      query,
     });
 
-    return new Promise((resolve, reject) => {
-      return this.connection.query(query, (err, rows) => {
-        return resolve(rows);
-      });
-    });
+    return new Promise((resolve) => this.connection.query(query, (err, rows) => resolve(rows)));
   }
 
   findByHash(opts = {}) {
     super.findByHash(opts);
 
-    const query = `SELECT keyword AS hash, url FROM ${this.opts.prefix}url WHERE keyword = '${opts.hash}'`;
+    const query = `SELECT keyword AS hash, url FROM ${this.opts.prefix}url `
+      + ` WHERE keyword = '${opts.hash}'`;
 
     this.log.debug('debug', 'findByHash generated query', {
       opts,
-      query
+      query,
     });
 
-    return new Promise((resolve, reject) => {
-      return this.connection.query(query, (err, rows) => {
-        let selectedResult = (rows.length && rows.push ? rows[0] : rows);
-        return resolve(selectedResult);
-      });
-    });
+    return new Promise((resolve) => this.connection.query(query, (err, rows) => {
+      const selectedResult = (rows.length && rows.push ? rows[0] : rows);
+      return resolve(selectedResult);
+    }));
   }
 
   find(opts = {}) {
@@ -66,7 +62,22 @@ class YourlsAdapter extends Shrinku.Adapters.BaseAdapter {
 
   save(opts = {}) {
     super.save(opts);
-    throw new Error('Not implemented.');
+    const query = 'INSERT INTO yourls_url SET ?';
+
+    return new Promise((resolve, reject) => {
+      const data = {
+        url: opts.url,
+        keyword: opts.hash,
+        ip: '1.1.1.1',
+        clicks: 0,
+      };
+
+      return this.connection.query(query, data, (err) => {
+        if (err) return reject(err);
+
+        return this.findByUrl(opts).then((result) => resolve(result));
+      });
+    });
   }
 }
 
